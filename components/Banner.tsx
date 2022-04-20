@@ -1,15 +1,20 @@
-import { InformationCircleIcon } from "@heroicons/react/outline"
-import Image from "next/image"
-import { useEffect, useState } from "react"
-import { baseUrl } from "../constants/movie"
-import { Movie } from "../typings"
-import {FaPlay} from "react-icons/fa"
+import { InformationCircleIcon } from '@heroicons/react/outline'
+import { useEffect, useState } from 'react'
+import { baseUrl } from '../constants/movie'
+import { Movie } from '../typings'
+import { FaPlay } from 'react-icons/fa'
+import { modalState, movieState } from '../atoms/modalAtom.'
+import { useRecoilState } from 'recoil'
+import Image from 'next/image'
 
-interface Props{
+interface Props {
   netflixOriginals: Movie[]
 }
+
 function Banner({ netflixOriginals }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null)
+  const [currentMovie, setCurrentMovie] = useRecoilState(movieState)
+  const [showModal, setShowModal] = useRecoilState(modalState)
 
   useEffect(() => {
     setMovie(
@@ -17,18 +22,16 @@ function Banner({ netflixOriginals }: Props) {
     )
   }, [netflixOriginals])
 
-  console.log(movie)
-
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
       <div className="absolute top-0 left-0 -z-10 h-[95vh] w-screen">
-      <Image
+        <Image
           layout="fill"
           src={`${baseUrl}${movie?.backdrop_path || movie?.poster_path}`}
           objectFit="cover"
         />
-
       </div>
+
       <h1 className="text-2xl font-bold md:text-4xl lg:text-7xl">
         {movie?.title || movie?.name || movie?.original_name}
       </h1>
@@ -51,7 +54,6 @@ function Banner({ netflixOriginals }: Props) {
           <InformationCircleIcon className="h-5 w-5 md:h-8 md:w-8" /> More Info
         </button>
       </div>
-
     </div>
   )
 }
